@@ -7,7 +7,6 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { userName, fullName, email, password } = req.body;
-  console.log(JWT_SECRET, cookieOptions);
 
   if (!userName || !fullName || !email || !password) {
     throw new ApiError(400, 'Please provide all required fields');
@@ -118,8 +117,10 @@ export const logOutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, 'User successfully logged out.'));
 });
 export const isLoggedIn = asyncHandler(async (req, res) => {
+  // console.log(req.cookies);
   let access_token = req.cookies?.access_token;
   let refresh_token = req.cookies?.refresh_token;
+  // console.log(access_token, refresh_token);
   const { _id } = req.params;
   if (access_token) {
     try {

@@ -12,6 +12,8 @@ export const getAllUserHandler = async (req, res) => {
 
 export const changeUserRoleHandler = async (req, res) => {
   try {
+    console.log('i got you', req.body.newRole);
+
     const userId = req.params.userId;
     const { role } = req.body;
     if (role === 'USER' || role === 'ADMIN') {

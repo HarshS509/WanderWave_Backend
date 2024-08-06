@@ -12,7 +12,7 @@ export const createPostHandler = async (req, res) => {
       description,
       isFeaturedPost = false,
     } = req.body;
-
+    console.log(req.body, 'and user is ', req.user._id);
     const userId = req.user._id;
 
     // Validation - check if all fields are filled
@@ -153,14 +153,14 @@ export const deletePostByIdHandler = async (req, res) => {
 };
 export const getRelatedPostsByCategories = async (req, res) => {
   const { categories } = req.query;
-  const categoriesArray = categories.split(',');
+  // const categoriesArray = categories.split(',');
 
   if (!categories) {
     return res.status(404).json({ message: 'Categories not found' });
   }
   try {
     const filteredCategoryPosts = await Post.find({
-      categories: { $in: categoriesArray },
+      categories: { $in: categories },
     });
     res.status(200).json(filteredCategoryPosts);
   } catch (err) {

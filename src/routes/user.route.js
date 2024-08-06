@@ -8,7 +8,9 @@ import {
 
 const router = Router();
 
+// router.route('/').get(authMiddleware, isAdminMiddleware, getAllUserHandler);
 router.route('/').get(authMiddleware, isAdminMiddleware, getAllUserHandler);
+
 router
   .route('/:userId')
   .patch(authMiddleware, isAdminMiddleware, changeUserRoleHandler)

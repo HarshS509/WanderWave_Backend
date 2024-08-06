@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { FRONTEND_URL } from './constants.js';
+import { FRONTEND_URL } from '../src/constants.js';
 import compression from 'compression';
-import { ApiResponse } from './utils/ApiResponse.js';
-import authRouter from './routes/auth.route.js';
-import userRouter from './routes/user.route.js';
-import postsRouter from './routes/post.route.js';
-import errorMiddleware from './middlewares/error.middleware.js';
+import { ApiResponse } from '../src/utils/ApiResponse.js';
+import authRouter from '../src/routes/auth.route.js';
+import userRouter from '../src/routes/user.route.js';
+import postsRouter from '../src/routes/post.route.js';
+import errorMiddleware from '../src/middlewares/error.middleware.js';
 
 export const app = express();
 app.use(
@@ -16,6 +16,7 @@ app.use(
     origin: [FRONTEND_URL, 'http://localhost:3000'],
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
