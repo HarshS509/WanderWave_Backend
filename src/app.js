@@ -12,7 +12,7 @@ import errorMiddleware from '../src/middlewares/error.middleware.js';
 export const app = express();
 app.use(
   cors({
-    origin: ['http://localhost:8081'],
+    origin: ['https://wander-wave.fun'],
     credentials: true,
   })
 );
