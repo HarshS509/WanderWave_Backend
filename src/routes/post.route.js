@@ -10,7 +10,6 @@ import {
   getRelatedPostsByCategories,
   updatePostHandler,
 } from '../controllers/posts.controller.js';
-import { REDIS_KEYS } from '../constants.js';
 import { cacheHandler } from '../utils/middleware.js';
 import { isAdminMiddleware, authMiddleware } from '../middlewares/auth.middleware.js';
 import { isAuthorMiddleware } from '../middlewares/post.middleware.js';
@@ -20,10 +19,10 @@ const router = Router();
 router.post('/', authMiddleware, createPostHandler);
 
 // Get all posts
-router.get('/', cacheHandler(REDIS_KEYS.ALL_POSTS), getAllPostsHandler);
+router.get('/', getAllPostsHandler);
 
 // Route to get featured posts
-router.get('/featured', cacheHandler(REDIS_KEYS.FEATURED_POSTS), getFeaturedPostsHandler);
+router.get('/featured', getFeaturedPostsHandler);
 
 // Route to get related category posts
 router.get('/related-posts-by-category', getRelatedPostsByCategories);
@@ -32,7 +31,7 @@ router.get('/related-posts-by-category', getRelatedPostsByCategories);
 router.get('/categories/:category', getPostByCategoryHandler);
 
 // Route for fetching the latest posts
-router.get('/latest', cacheHandler(REDIS_KEYS.LATEST_POSTS), getLatestPostsHandler);
+router.get('/latest', getLatestPostsHandler);
 // Get a specific post by ID
 router.get('/:id', getPostByIdHandler);
 

@@ -1,5 +1,3 @@
-import { retrieveDataFromCache } from './cachedPosts.js';
-
 export const cacheHandler = (key) => async (req, res, next) => {
   try {
     const cachedData = await retrieveDataFromCache(key);

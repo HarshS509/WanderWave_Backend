@@ -1,7 +1,7 @@
-import { REDIS_KEYS, validCategories } from '../constants.js';
+import { validCategories } from '../constants.js';
 import { Post } from '../models/post.model.js';
 import User from '../models/user.model.js';
-import { deleteDataFromCache, storeDataInCache } from '../utils/cachedPosts.js';
+
 export const createPostHandler = async (req, res) => {
   try {
     const {
@@ -45,9 +45,7 @@ export const createPostHandler = async (req, res) => {
 
     const [savedPost] = await Promise.all([
       post.save(), // Save the post
-      deleteDataFromCache(REDIS_KEYS.ALL_POSTS), // Invalidate cache for all posts
-      deleteDataFromCache(REDIS_KEYS.FEATURED_POSTS), // Invalidate cache for featured posts
-      deleteDataFromCache(REDIS_KEYS.LATEST_POSTS), // Invalidate cache for latest posts
+      // Invalidate cache for latest posts
     ]);
 
     // updating user doc to include the ObjectId of the created post
@@ -61,7 +59,6 @@ export const createPostHandler = async (req, res) => {
 export const getAllPostsHandler = async (req, res) => {
   try {
     const posts = await Post.find();
-    await storeDataInCache(REDIS_KEYS.ALL_POSTS, posts);
     return res.status(200).json(posts);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -70,7 +67,6 @@ export const getAllPostsHandler = async (req, res) => {
 export const getFeaturedPostsHandler = async (req, res) => {
   try {
     const featuredPosts = await Post.find({ isFeaturedPost: true });
-    await storeDataInCache(REDIS_KEYS.FEATURED_POSTS, featuredPosts);
     res.status(200).json(featuredPosts);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -93,7 +89,7 @@ export const getPostByCategoryHandler = async (req, res) => {
 export const getLatestPostsHandler = async (req, res) => {
   try {
     const latestPosts = await Post.find().sort({ timeOfPost: -1 });
-    await storeDataInCache(REDIS_KEYS.LATEST_POSTS, latestPosts);
+
     res.status(200).json(latestPosts);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -124,10 +120,8 @@ export const updatePostHandler = async (req, res) => {
       return res.status(404).json({ message: 'The requested post was not found.' });
     }
     // invalidate the redis cache
-    await deleteDataFromCache(REDIS_KEYS.ALL_POSTS),
-      await deleteDataFromCache(REDIS_KEYS.FEATURED_POSTS),
-      await deleteDataFromCache(REDIS_KEYS.LATEST_POSTS),
-      await res.status(200).json(updatedPost);
+
+    await res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -143,10 +137,8 @@ export const deletePostByIdHandler = async (req, res) => {
     await User.findByIdAndUpdate(post.authorId, { $pull: { posts: req.params.id } });
 
     // invalidate the redis cache
-    await deleteDataFromCache(REDIS_KEYS.ALL_POSTS),
-      await deleteDataFromCache(REDIS_KEYS.FEATURED_POSTS),
-      await deleteDataFromCache(REDIS_KEYS.LATEST_POSTS),
-      res.status(200).json({ message: 'Post deleted' });
+
+    res.status(200).json({ message: 'Post deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

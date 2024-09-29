@@ -12,13 +12,7 @@ import errorMiddleware from '../src/middlewares/error.middleware.js';
 export const app = express();
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, origin); // Allow the origin
-      } else {
-        callback(new Error('Not allowed by CORS')); // Block the origin
-      }
-    },
+    origin: ['http://localhost:8081'],
     credentials: true,
   })
 );
